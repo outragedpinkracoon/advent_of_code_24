@@ -7,6 +7,8 @@ module DayOnePartOne
     diffs.sum
   end
 
+  # returns a 'tuple' with the first set of numbers [1,3,2] and the second [4,4,5]
+  # in this format [[1,3,2], [4,4,5]]
   def self.parse(file_path)
     File.readlines(file_path).each_with_object([[], []]) do |item, obj|
       parts = item.split
@@ -15,6 +17,8 @@ module DayOnePartOne
     end
   end
 
+  # take two arrays [1,3,2], [4,4,5] sorts them from smallest to biggest
+  # and returns the diff between the two numbers [3,1,3]
   def self.match(set_one, set_two)
     diffs = []
     sorted_set_one = set_one.sort
