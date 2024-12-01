@@ -6,8 +6,7 @@ module DayOne
     # between the numbers when they are ordered smallest to biggest in pairs.
     def self.run(file_path)
       set_one, set_two = parse(file_path)
-      diffs = match(set_one, set_two)
-      diffs.sum
+      match(set_one, set_two).sum
     end
 
     # returns a 'tuple' with the first set of numbers [1,3,2] and the second [4,4,5]

@@ -4,8 +4,7 @@ module DayOne
   module PartTwo
     def self.run(file_path)
       set_one, set_two = DayOne::PartOne.parse(file_path)
-      similarities = similarities(set_one, set_two)
-      similarities.sum
+      similarities(set_one, set_two).sum
     end
 
     # Tallies the numbers in the second set e.g {4=>1, 3=>3, 5=>1, 9=>1} for
