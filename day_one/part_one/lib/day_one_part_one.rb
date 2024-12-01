@@ -8,24 +8,22 @@ module DayOnePartOne
   end
 
   def self.parse(file_path)
-    set_one = []
-    set_two = []
-
-    File.foreach(file_path) do |line|
-      parts = line.split
-      set_one << parts[0].to_i
-      set_two << parts[1].to_i
+    File.readlines(file_path).each_with_object([[], []]) do |item, obj|
+      parts = item.split
+      obj[0] << parts[0].to_i
+      obj[1] << parts[1].to_i
     end
-    [set_one, set_two]
   end
 
   def self.match(set_one, set_two)
     diffs = []
     sorted_set_one = set_one.sort
     sorted_set_two = set_two.sort
+
     sorted_set_one.each_with_index do |item, index|
       diffs << (item - sorted_set_two[index]).abs
     end
+
     diffs
   end
 end
