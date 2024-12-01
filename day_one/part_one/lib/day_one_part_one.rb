@@ -13,8 +13,10 @@ module DayOne
     # in this format [[1,3,2], [4,4,5]]
     def self.parse(file_path)
       File.readlines(file_path).map do |line|
-        line.split.map(&:to_i) # array of pairs like [[3,4], [4,3]]
-      end.transpose # puts together like [[3,4], [4,3]]
+        # make the input lines 3   4 etc into an array of pairs like [[3,4], [4,3]]
+        line.split.map(&:to_i)
+        # puts together into one 'tuple' carrier array like [[3,4], [4,3]]
+      end.transpose
     end
 
     # take two arrays [1,3,2], [4,4,5] sorts them from smallest to biggest
