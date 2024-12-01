@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DayOnePartOne
-  attr_reader :set_one, :set_two, :diffs
+  attr_reader :set_one, :set_two, :diffs, :sum
 
   def initialize(file_path)
     @file_path = file_path
@@ -12,6 +12,7 @@ class DayOnePartOne
     parse
     sort
     match
+    @sum = diffs.sum
   end
 
   private

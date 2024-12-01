@@ -18,4 +18,10 @@ class DayOnePartOneTest < Minitest::Test
 
     assert_equal([2, 1, 0, 1, 2, 5], @dopo.diffs)
   end
+
+  def test_can_sum
+    @dopo = DayOnePartOne.new('day_one/part_one/data/test_data.txt')
+
+    assert_equal(11, @dopo.sum)
+  end
 end
