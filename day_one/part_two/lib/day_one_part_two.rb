@@ -14,10 +14,9 @@ module DayOne
     def self.similarities(set_one, set_two)
       tallies = set_two.tally
 
-      set_one.each_with_object([]) do |item, similarities|
+      set_one.map do |item|
         count = tallies[item]
-        result = count.nil? ? 0 : count * item
-        similarities << result
+        count.nil? ? 0 : count * item
       end
     end
   end
