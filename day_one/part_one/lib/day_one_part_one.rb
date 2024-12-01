@@ -28,8 +28,8 @@ module DayOne
       set_one
         .sort
         .each_with_index
-        .with_object([]) do |(item, index), obj|
-        obj << (item - sorted_set_two[index]).abs
+        .with_object([]) do |(item, index), diffs|
+        diffs << (item - sorted_set_two[index]).abs
       end
     end
   end
