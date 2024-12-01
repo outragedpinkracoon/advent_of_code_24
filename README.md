@@ -1,3 +1,3 @@
-# Hello
+# Advent of Code 2024
 
-I'm just fannying around.
+In Ruby because I love Ruby and you should too.
