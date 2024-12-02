@@ -71,4 +71,10 @@ class DayTwoPartOneTest < Minitest::Test
       assert_equal(expected, result, "Failed for input: #{input.inspect}")
     end
   end
+
+  def test_returns_correct_count
+    result = DayTwo::PartOne.run('day_two/part_one/data/test_data.txt')
+
+    assert_equal(2, result)
+  end
 end

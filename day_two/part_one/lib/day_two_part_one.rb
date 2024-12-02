@@ -14,7 +14,7 @@ module DayTwo
     end
 
     def self.check_safety(reports)
-      reports.map do |report|
+      reports.count do |report|
         safe?(report)
       end
     end
