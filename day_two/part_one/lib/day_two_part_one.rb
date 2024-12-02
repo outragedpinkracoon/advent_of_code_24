@@ -8,9 +8,7 @@ module DayTwo
     end
 
     def self.parse(file_path)
-      File.readlines(file_path).map do |line|
-        line.split.map(&:to_i)
-      end
+      File.readlines(file_path).map { |line| line.split.map(&:to_i) }
     end
 
     def self.check_safety(reports)
@@ -26,42 +24,19 @@ module DayTwo
 
     # Check if all levels in a report are increasing
     def self.all_increasing?(report)
-      current = report.first
-      report[1..report.count].each do |item|
-        if current < item
-          current = item
-          next
-        end
-        return false
-      end
-      true
+      diffs = report.each_cons(2).map { |a, b| b > a }
+      diffs.uniq.count == 1 && diffs.first == true
     end
 
     # Check if all levels in a report are decreasing
     def self.all_decreasing?(report)
-      current = report.first
-      report[1..report.count].each do |item|
-        if current > item
-          current = item
-          next
-        end
-        return false
-      end
-      true
+      diffs = report.each_cons(2).map { |a, b| b < a }
+      diffs.uniq.count == 1 && diffs.first == true
     end
 
     # Check if any two adjacent levels in a report differ by at least one and at most three.
     def self.acceptable_difference?(report)
-      current = report.first
-      report[1..report.count].each do |item|
-        diff = (current - item).abs
-        if diff >= 1 && diff <= 3
-          current = item
-          next
-        end
-        return false
-      end
-      true
+      report.each_cons(2).all? { |a, b| (a - b).abs.between?(1, 3) }
     end
   end
 end
