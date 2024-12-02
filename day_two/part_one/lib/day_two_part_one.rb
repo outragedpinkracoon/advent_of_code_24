@@ -20,15 +20,16 @@ module DayTwo
     end
 
     def self.safe?(report)
-      all_increasing?(report) &&
-        all_decreasing?(report)
+      (all_increasing?(report) || all_decreasing?(report)) &&
+        acceptable_difference?(report)
     end
 
+    # Check if all levels in a report are increasing
     def self.all_increasing?(report)
-      current_number = report.first
+      current = report.first
       report[1..report.count].each do |item|
-        if current_number < item
-          current_number = item
+        if current < item
+          current = item
           next
         end
         return false
@@ -36,11 +37,26 @@ module DayTwo
       true
     end
 
+    # Check if all levels in a report are decreasing
     def self.all_decreasing?(report)
-      current_number = report.first
+      current = report.first
       report[1..report.count].each do |item|
-        if current_number > item
-          current_number = item
+        if current > item
+          current = item
+          next
+        end
+        return false
+      end
+      true
+    end
+
+    # Check if any two adjacent levels in a report differ by at least one and at most three.
+    def self.acceptable_difference?(report)
+      current = report.first
+      report[1..report.count].each do |item|
+        diff = (current - item).abs
+        if diff >= 1 && diff <= 3
+          current = item
           next
         end
         return false

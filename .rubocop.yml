@@ -24,4 +24,4 @@ AllCops:
 Metrics/MethodLength:
   Enabled: true
   Exclude:
-    - 'test/**/*_test.rb'
+    - '**/test/**/*_test.rb'
