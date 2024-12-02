@@ -2,6 +2,7 @@
 
 require_relative '../../../test_helper'
 require_relative '../lib/day_two_part_one'
+require 'pry-byebug'
 
 class DayTwoPartOneTest < Minitest::Test
   def test_can_parse_data
@@ -19,5 +20,23 @@ class DayTwoPartOneTest < Minitest::Test
     result = DayTwo::PartOne.all_increasing?([1, 2, 4, 6, 7])
 
     assert(result)
+
+    result = DayTwo::PartOne.all_increasing?([1, 2, 6, 4, 7])
+
+    refute(result)
+  end
+
+  def test_can_check_all_decreasing
+    result = DayTwo::PartOne.all_decreasing?([7, 6, 4, 2, 1])
+
+    assert(result)
+
+    result = DayTwo::PartOne.all_decreasing?([1, 2, 4, 6, 7])
+
+    refute(result)
+
+    result = DayTwo::PartOne.all_decreasing?([1, 2, 6, 4, 7])
+
+    refute(result)
   end
 end

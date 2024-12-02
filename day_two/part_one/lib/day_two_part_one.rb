@@ -20,15 +20,29 @@ module DayTwo
     end
 
     def self.safe?(report)
-      all_increasing?(report)
+      all_increasing?(report) &&
+        all_decreasing?(report)
     end
 
     def self.all_increasing?(report)
       current_number = report.first
       report[1..report.count].each do |item|
-        next if current_number < item
+        if current_number < item
+          current_number = item
+          next
+        end
+        return false
+      end
+      true
+    end
 
-        current_number = item
+    def self.all_decreasing?(report)
+      current_number = report.first
+      report[1..report.count].each do |item|
+        if current_number > item
+          current_number = item
+          next
+        end
         return false
       end
       true
