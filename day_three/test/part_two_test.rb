@@ -6,8 +6,8 @@ require 'pry-byebug'
 
 class DayThreePartTwoTest < Minitest::Test
   def test_can_return_correct_result
-    result = DayThree::PartTwo.run('day_three/data/test_data.txt')
+    result = DayThree::PartTwo.run('day_three/data/test_data_part_2.txt')
 
-    assert_equal(161, result)
+    assert_equal(48, result)
   end
 end
