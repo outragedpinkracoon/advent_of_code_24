@@ -12,7 +12,7 @@ class DayTwoPartTwoTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def xtest_can_check_safe
+  def test_can_check_safe
     test_cases = {
       [7, 6, 4, 2, 1] => true,   # Safe
       [1, 2, 7, 8, 9] => false,  # Unsafe regardless
@@ -23,9 +23,15 @@ class DayTwoPartTwoTest < Minitest::Test
     }
 
     test_cases.each do |input, expected|
-      result = DayTwo::PartTwo.safe?(input)
+      result = DayTwo::PartTwo.any_safe?(input)
 
       assert_equal(expected, result, "Failed for input: #{input.inspect}")
     end
+  end
+
+  def test_returns_correct_count
+    result = DayTwo::PartTwo.run('day_two/part_one/data/test_data.txt')
+
+    assert_equal(4, result)
   end
 end

@@ -13,8 +13,13 @@ module DayTwo
 
     def self.check_safety(reports)
       reports.count do |report|
-        safe?(report)
+        any_safe?(report)
       end
+    end
+
+    # Generate all variations of a report and check if any of them are safe
+    def self.any_safe?(report)
+      variations(report).any? { |a| safe?(a) }
     end
 
     def self.safe?(report)
