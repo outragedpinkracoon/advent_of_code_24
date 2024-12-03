@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../../../test_helper'
-require_relative '../lib/day_two_part_two'
+require_relative '../../test_helper'
+require_relative '../lib/part_two'
 require 'pry-byebug'
 
 class DayTwoPartTwoTest < Minitest::Test
@@ -30,7 +30,7 @@ class DayTwoPartTwoTest < Minitest::Test
   end
 
   def test_returns_correct_count
-    result = DayTwo::PartTwo.run('day_two/part_one/data/test_data.txt')
+    result = DayTwo::PartTwo.run('day_two/data/test_data.txt')
 
     assert_equal(4, result)
   end

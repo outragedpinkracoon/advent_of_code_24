@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative '../../../test_helper'
-require_relative '../lib/day_two_part_one'
+require_relative '../../test_helper'
+require_relative '../lib/part_one'
 require 'pry-byebug'
 
 class DayTwoPartOneTest < Minitest::Test
   def test_can_parse_data
-    result = DayTwo::PartOne.parse('day_two/part_one/data/test_data.txt')
+    result = DayTwo::PartOne.parse('day_two/data/test_data.txt')
 
     assert_equal([7, 6, 4, 2, 1], result[0])
     assert_equal(6, result.count)
@@ -73,7 +73,7 @@ class DayTwoPartOneTest < Minitest::Test
   end
 
   def test_returns_correct_count
-    result = DayTwo::PartOne.run('day_two/part_one/data/test_data.txt')
+    result = DayTwo::PartOne.run('day_two/data/test_data.txt')
 
     assert_equal(2, result)
   end
