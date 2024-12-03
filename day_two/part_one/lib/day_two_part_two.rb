@@ -22,6 +22,16 @@ module DayTwo
         acceptable_difference?(report)
     end
 
+    # For a given report [7, 6, 4, 2] generates all variations with a number removed
+    # [[6, 4, 2], [7, 4, 2], [7, 6, 2], [7, 6, 4]]
+    def self.variations(report)
+      report.each_index.map do |index|
+        new_array = report.dup
+        new_array.delete_at(index)
+        new_array
+      end
+    end
+
     # Check if all levels in a report are increasing
     def self.all_increasing?(report)
       diffs = report.each_cons(2).map { |a, b| b > a }
