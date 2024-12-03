@@ -2,6 +2,7 @@
 
 module DayOne
   module PartTwo
+    # Read in the file and return the number of similarites between the two sets
     def self.run(file_path)
       set_one, set_two = DayOne::PartOne.parse(file_path)
       similarities(set_one, set_two).sum

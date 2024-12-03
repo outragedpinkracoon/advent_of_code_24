@@ -2,21 +2,26 @@
 
 module DayTwo
   module PartOne
+    # Return the number of reports that are considered safe
     def self.run(file_path)
       reports = parse(file_path)
-      check_safety(reports)
+      count_safe(reports)
     end
 
+    # Read in a file of reports and map them to arrays of integers like [7, 6, 4, 2, 1]
     def self.parse(file_path)
       File.readlines(file_path).map { |line| line.split.map(&:to_i) }
     end
 
-    def self.check_safety(reports)
+    # Count the number of reports that are considered safe
+    def self.count_safe(reports)
       reports.count do |report|
         safe?(report)
       end
     end
 
+    # Returns true if all the numbers increase OR all the numbers decrease AND the
+    # difference between the numbers in within an acceptable tolerance.
     def self.safe?(report)
       (all_increasing?(report) || all_decreasing?(report)) &&
         acceptable_difference?(report)

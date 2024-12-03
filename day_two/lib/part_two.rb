@@ -2,16 +2,15 @@
 
 module DayTwo
   module PartTwo
+    # Check the safety of the reports using the new tolerance where we can drop an item
+    # from the report like it never happened and consider it safe.
     def self.run(file_path)
-      reports = parse(file_path)
-      check_safety(reports)
+      reports = DayTwo::PartOne.parse(file_path)
+      count_safe(reports)
     end
 
-    def self.parse(file_path)
-      File.readlines(file_path).map { |line| line.split.map(&:to_i) }
-    end
-
-    def self.check_safety(reports)
+    # Count the number of reports that are safe based on the new safety tolerance
+    def self.count_safe(reports)
       reports.count do |report|
         any_safe?(report)
       end
@@ -19,12 +18,7 @@ module DayTwo
 
     # Generate all variations of a report and check if any of them are safe
     def self.any_safe?(report)
-      variations(report).any? { |a| safe?(a) }
-    end
-
-    def self.safe?(report)
-      (all_increasing?(report) || all_decreasing?(report)) &&
-        acceptable_difference?(report)
+      variations(report).any? { |a| DayTwo::PartOne.safe?(a) }
     end
 
     # For a given report [7, 6, 4, 2] generates all variations with a number removed
@@ -35,23 +29,6 @@ module DayTwo
         new_array.delete_at(index)
         new_array
       end
-    end
-
-    # Check if all levels in a report are increasing
-    def self.all_increasing?(report)
-      diffs = report.each_cons(2).map { |a, b| b > a }
-      diffs.uniq.count == 1 && diffs.first == true
-    end
-
-    # Check if all levels in a report are decreasing
-    def self.all_decreasing?(report)
-      diffs = report.each_cons(2).map { |a, b| b < a }
-      diffs.uniq.count == 1 && diffs.first == true
-    end
-
-    # Check if any two adjacent levels in a report differ by at least one and at most three.
-    def self.acceptable_difference?(report)
-      report.each_cons(2).all? { |a, b| (a - b).abs.between?(1, 3) }
     end
   end
 end
