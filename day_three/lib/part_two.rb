@@ -17,15 +17,13 @@ module DayThree
     end
 
     # filters out the mul pairs based on if do is enabled or not
-    def self.filter(matches, enabled: true)
+    def self.filter(matches)
+      enabled = true
       matches.each_with_object([]) do |item, obj|
         case item
-        when 'do()'
-          enabled = true
-        when "don't()"
-          enabled = false
-        else
-          obj << item if enabled
+        when 'do()' then enabled = true
+        when "don't()" then enabled = false
+        else obj << item if enabled
         end
       end
     end
