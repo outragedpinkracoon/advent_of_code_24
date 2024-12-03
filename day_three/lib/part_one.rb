@@ -3,11 +3,15 @@
 module DayThree
   module PartOne
     def self.run(file_path)
-      regex = /mul\(\d{1,3},\d{1,3}\)/
-
       input = File.read(file_path)
-      matches = input.scan(regex)
+      matches = find_matches(input)
       mulitply_results(matches)
+    end
+
+    # match only the pattern mul(num,num) where num is 1-3 digits with no whitespace etc
+    def self.find_matches(input)
+      regex = /mul\(\d{1,3},\d{1,3}\)/
+      input.scan(regex)
     end
 
     # takes in matches and mulitplies the result together
