@@ -6,8 +6,8 @@ require 'pry-byebug'
 
 class DayThreePartOneTest < Minitest::Test
   def test_can_parse_data
-    result = DayThree::PartOne.parse('day_three/data/test_data.txt')
+    result = DayThree::PartOne.run('day_three/data/test_data.txt')
 
-    assert_equal('x', result[0])
+    assert_equal(4, result)
   end
 end
