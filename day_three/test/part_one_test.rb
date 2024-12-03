@@ -5,6 +5,7 @@ require_relative '../lib/part_one'
 require 'pry-byebug'
 
 class DayThreePartOneTest < Minitest::Test
+  # 161289189 on full data set
   def test_can_return_correct_result
     result = DayThree::PartOne.run('day_three/data/test_data.txt')
 
