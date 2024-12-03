@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../../../test_helper'
-require_relative '../lib/day_one_part_two'
+require_relative '../../test_helper'
+require_relative '../lib/part_two'
 
 class DayOnePartTwoTest < Minitest::Test
   def test_can_find_similarties
@@ -14,7 +14,7 @@ class DayOnePartTwoTest < Minitest::Test
   end
 
   def test_can_create_correct_result
-    result = DayOne::PartTwo.run('day_one/part_one/data/test_data.txt')
+    result = DayOne::PartTwo.run('day_one/data/test_data.txt')
 
     assert_equal(31, result)
   end
