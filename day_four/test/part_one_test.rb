@@ -61,8 +61,8 @@ class DayFourPartOneTest < Minitest::Test
   end
 
   def test_input_file
-    result = DayFour::PartOne.run('day_four/data/diagonal_data.txt', 'XM')
+    result = DayFour::PartOne.run('day_four/data/test_data.txt', 'XMAS')
 
-    assert_equal(5, result)
+    assert_equal(18, result)
   end
 end
