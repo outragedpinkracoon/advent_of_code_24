@@ -14,10 +14,7 @@ module DayFour
     end
 
     def self.find_diagonals(grid, limit:)
-      # Grouping for top-left to bottom-right (↘) and bottom-right to top-left (↖)
       top_left_to_bottom_right = grid.group_by { |(_, row, col)| row - col }
-
-      # Grouping for top-right to bottom-left (↙) and bottom-left to top-right (↗)
       top_right_to_bottom_left = grid.group_by { |(_, row, col)| row + col }
 
       valid_diagonals_tl_br = top_left_to_bottom_right.values.select { |diag| diag.size >= limit }

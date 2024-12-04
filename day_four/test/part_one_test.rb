@@ -60,6 +60,7 @@ class DayFourPartOneTest < Minitest::Test
     assert_equal(4, result)
   end
 
+  # 2547 is correct answer
   def test_input_file
     result = DayFour::PartOne.run('day_four/data/test_data.txt', 'XMAS')
 
