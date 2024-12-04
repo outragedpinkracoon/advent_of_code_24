@@ -5,7 +5,7 @@ require_relative '../lib/part_one'
 require 'pry-byebug'
 
 class DayFourPartOneTest < Minitest::Test
-  def test_can_return_correct_result
+  def test_can_return_co_ords
     input = %w[XZZZ ZMZZ ZZAZ ZZZS]
     result = DayFour::PartOne.map_to_coords(input)
 
@@ -58,5 +58,11 @@ class DayFourPartOneTest < Minitest::Test
     result = DayFour::PartOne.find_word_count(input, 'XM')
 
     assert_equal(4, result)
+  end
+
+  def test_input_file
+    result = DayFour::PartOne.run('day_four/data/diagonal_data.txt', 'XM')
+
+    assert_equal(5, result)
   end
 end

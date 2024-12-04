@@ -2,11 +2,12 @@
 
 module DayFour
   module PartOne
-    def self.run(file_path)
+    def self.run(file_path, word)
       input = File.readlines(file_path, chomp: true)
       grid = map_to_coords(input)
-      diagonals = find_diagonals(grid)
-      just_letters(diagonals)
+      diagonals = find_diagonals(grid, limit: word.length)
+      just_letters = just_letters(diagonals)
+      find_word_count(just_letters, word)
     end
 
     def self.find_diagonals(grid, limit:)
