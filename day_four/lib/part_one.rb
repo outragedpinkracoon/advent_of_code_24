@@ -6,11 +6,7 @@ module DayFour
       input = File.readlines(file_path, chomp: true)
       grid = map_to_coords(input)
       diagonals = find_diagonals(grid)
-      count = 0
-      diagonals.each do |diagonal_list|
-        count += find_word_count(diagonal_list, 'XM')
-      end
-      count
+      just_letters(diagonals)
     end
 
     def self.find_diagonals(grid, limit:)
@@ -28,14 +24,25 @@ module DayFour
 
     # takes an array of co-ords and finds how many times the word is in it
     # input = [[["X", 1, 1], ["M", 2, 2], ["A", 3, 3], ["S", 4, 4]]]
-    def self.find_word_count(coord_list, word)
-      matches = []
-      word_length = word.length
-      (0..(coord_list.size - word_length)).each do |start_index|
-        segment = coord_list[start_index, word_length]
-        matches << segment if segment == word.chars
+    def self.find_word_count(letter_sets, word)
+      count = 0
+      letter_sets.each do |set|
+        set.each_cons(2) do |segment|
+          check = segment.join
+
+          next unless check == word || check == word.reverse
+
+          count += 1
+        end
       end
-      matches.count
+      count
+    end
+
+    # Keep only the first element (letter) from each triplet
+    def self.just_letters(coord_list)
+      coord_list.map do |batch|
+        batch.map { |entry| entry[0] }
+      end
     end
 
     # takes in an array like ["XZZZ", "ZMZZ", "ZZAZ", "ZZZS"] and maps each item

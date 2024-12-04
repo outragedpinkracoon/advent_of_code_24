@@ -43,4 +43,20 @@ class DayFourPartOneTest < Minitest::Test
 
     assert_equal(expected, groupings)
   end
+
+  def test_can_find_word_in_diagonals
+    input = [%w[X M X M],
+             %w[B X J],
+             %w[C G],
+             %w[E I J],
+             %w[H K],
+             %w[B E],
+             %w[C M H],
+             %w[M X I D],
+             %w[G X K],
+             %w[J J]]
+    result = DayFour::PartOne.find_word_count(input, 'XM')
+
+    assert_equal(4, result)
+  end
 end
