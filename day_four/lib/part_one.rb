@@ -9,18 +9,26 @@ module DayFour
       diagonals = find_diagonals(grid, limit: limit)
       verticals = find_verticals(grid, limit: limit)
       horizonals = find_horizontals(grid, limit: limit)
-      just_letters = just_letters(diagonals + verticals + horizonals)
+      all_dimensions = diagonals + verticals + horizonals
+      just_letters = just_letters(all_dimensions)
       find_word_count(just_letters, word)
     end
 
+    # In a diagonal, the diff between row and col is always constant. Whether it's 0,
+    # 1 or -1, it just indicates *which diagonal* a set of letters belongs to.
+    # group by returns a construct like this
+    # {
+    # 0 => [['X', 1, 1], ['M', 2, 2], ['A', 3, 3], ['S', 4, 4]], # Main diagonal
+    # -1 => [['B', 1, 2], ['X', 2, 3], ['J', 3, 4]]             # Off-diagonal
+    # }
+    # We then filter out any diagonals that are less than the length of the
+    # word we are looking for, because those are invalid.
     def self.find_diagonals(grid, limit:)
       top_left_to_bottom_right = grid.group_by { |(_, row, col)| row - col }
       top_right_to_bottom_left = grid.group_by { |(_, row, col)| row + col }
 
-      valid_diagonals_tl_br = top_left_to_bottom_right.values.select { |diag| diag.size >= limit }
-      valid_diagonals_tr_bl = top_right_to_bottom_left.values.select { |diag| diag.size >= limit }
-
-      valid_diagonals_tl_br + valid_diagonals_tr_bl
+      diagonals = top_left_to_bottom_right.values + top_right_to_bottom_left.values
+      diagonals.select { |diag| diag.size >= limit }
     end
 
     def self.find_horizontals(grid, limit:)

@@ -34,7 +34,8 @@ class DayFourPartOneTest < Minitest::Test
       [['B', 1, 2], ['X', 2, 3], ['J', 3, 4]],
       [['C', 1, 3], ['G', 2, 4]],
       [['E', 2, 1], ['I', 3, 2], ['J', 4, 3]],
-      [['H', 3, 1], ['K', 4, 2]], [['B', 1, 2], ['E', 2, 1]],
+      [['H', 3, 1], ['K', 4, 2]],
+      [['B', 1, 2], ['E', 2, 1]],
       [['C', 1, 3], ['M', 2, 2], ['H', 3, 1]],
       [['M', 1, 4], ['X', 2, 3], ['I', 3, 2], ['D', 4, 1]],
       [['G', 2, 4], ['X', 3, 3], ['K', 4, 2]],
@@ -60,7 +61,7 @@ class DayFourPartOneTest < Minitest::Test
     assert_equal(4, result)
   end
 
-  # 2547 is correct answer
+  # # 2547 is correct answer
   def test_input_file
     result = DayFour::PartOne.run('day_four/data/test_data.txt', 'XMAS')
 
