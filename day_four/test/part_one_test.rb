@@ -62,9 +62,18 @@ class DayFourPartOneTest < Minitest::Test
   end
 
   # # 2547 is correct answer on full set
-  def test_input_file
+  def test_returns_correct_answer_for_input_file
     result = DayFour::PartOne.run('day_four/data/test_data.txt', 'XMAS')
 
     assert_equal(18, result)
+  end
+
+  def test_can_convert_co_ords_to_letters
+    input = [[['M', 1, 1], ['S', 2, 2]], [['A', 1, 2]]]
+    result = DayFour::PartOne.extract_letters(input)
+
+    expected = [%w[M S], %w[A]]
+
+    assert_equal(expected, result)
   end
 end
