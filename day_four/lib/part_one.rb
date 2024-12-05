@@ -4,17 +4,18 @@ module DayFour
   module PartOne
     def self.run(file_path, word)
       input = File.readlines(file_path, chomp: true)
+
       grid = map_to_coords(input)
       limit = word.length
 
-      all_sequences = all_sequences(grid, limit: limit)
-      just_letters = extract_letters(all_sequences)
+      all_valid_sequences = all_valid_sequences(grid, limit: limit)
+      just_letters = extract_letters(all_valid_sequences)
 
       count_word_occurrences(just_letters, word)
     end
 
     # Collect sequences from all dimensions - diagonal, horizonta and vertical
-    def self.all_sequences(grid, limit:)
+    def self.all_valid_sequences(grid, limit:)
       find_diagonals(grid, limit: limit) +
         find_horizontals(grid, limit: limit) +
         find_verticals(grid, limit: limit)
@@ -59,16 +60,23 @@ module DayFour
     end
 
     # takes an array of letters and finds how many times the word is in it
+    # input = [["X", "M", "X", "M"],["B", "X", "J"]]
     def self.count_word_occurrences(letter_sets, word)
       word_length = word.length
+      # count how many times the word appears in a given set
       letter_sets.sum do |set|
-        set.each_cons(word_length).count { |segment| segment.join == word || segment.join == word.reverse }
+        # map out segments of the set based on the word length e.g.
+        # [["X", "M"], ["M", "X"], ["X", "M"]] if it was two for ["X", "M", "X", "M"]
+        sets = set.each_cons(word_length)
+        # join the segment ["M", "X"] into "MX" and see if matches the searched for word
+        sets.count { |segment| segment.join == word || segment.join == word.reverse }
       end
     end
 
     # Extracts letters from coordinate lists
+    # [[["M", 1, 1], ["S", 2, 2]]] => [["M"], ["S"]]
     def self.extract_letters(coord_list)
-      coord_list.map { |batch| batch.map(&:first) }
+      coord_list.map { |coord| coord.map(&:first) }
     end
 
     # Converts an input array like ["XZZZ", "ZMZZ"] into coordinates [["X", 1, 1], ["Z", 1, 2]]
