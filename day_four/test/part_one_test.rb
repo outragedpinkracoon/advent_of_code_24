@@ -19,6 +19,44 @@ class DayFourPartOneTest < Minitest::Test
     assert_equal(expected, result)
   end
 
+  def test_can_find_horizontals
+    input = [
+      ['X', 1, 1], ['M', 1, 2], ['A', 1, 3], ['S', 1, 4],
+      ['E', 2, 1], ['M', 2, 2], ['X', 2, 3], ['G', 2, 4],
+      ['H', 3, 1], ['I', 3, 2], ['A', 3, 3], ['J', 3, 4],
+      ['D', 4, 1], ['K', 4, 2], ['J', 4, 3], ['M', 4, 4]
+    ]
+
+    result = DayFour::PartOne.find_horizontals(input, limit: 4)
+    expected = [
+      [['X', 1, 1], ['M', 1, 2], ['A', 1, 3], ['S', 1, 4]],
+      [['E', 2, 1], ['M', 2, 2], ['X', 2, 3], ['G', 2, 4]],
+      [['H', 3, 1], ['I', 3, 2], ['A', 3, 3], ['J', 3, 4]],
+      [['D', 4, 1], ['K', 4, 2], ['J', 4, 3], ['M', 4, 4]]
+    ]
+
+    assert_equal(expected, result)
+  end
+
+  def test_can_find_verticals
+    input = [
+      ['X', 1, 1], ['I', 1, 2], ['A', 1, 3], ['S', 1, 4],
+      ['M', 2, 1], ['M', 2, 2], ['X', 2, 3], ['G', 2, 4],
+      ['A', 3, 1], ['I', 3, 2], ['A', 3, 3], ['J', 3, 4],
+      ['S', 4, 1], ['K', 4, 2], ['J', 4, 3], ['M', 4, 4]
+    ]
+
+    result = DayFour::PartOne.find_horizontals(input, limit: 4)
+    expected = [
+      [['X', 1, 1], ['I', 1, 2], ['A', 1, 3], ['S', 1, 4]],
+      [['M', 2, 1], ['M', 2, 2], ['X', 2, 3], ['G', 2, 4]],
+      [['A', 3, 1], ['I', 3, 2], ['A', 3, 3], ['J', 3, 4]],
+      [['S', 4, 1], ['K', 4, 2], ['J', 4, 3], ['M', 4, 4]]
+    ]
+
+    assert_equal(expected, result)
+  end
+
   def test_can_find_diagonals
     input = [
       ['X', 1, 1], ['B', 1, 2], ['C', 1, 3], ['M', 1, 4],
