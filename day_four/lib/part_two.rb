@@ -2,88 +2,92 @@
 
 module DayFour
   module PartTwo
-    def self.run(file_path, word)
+    def self.run(file_path)
       input = File.readlines(file_path, chomp: true)
 
-      grid = map_to_coords(input)
-      limit = word.length
+      grid = DayFour::PartOne.map_to_coords(input)
 
-      all_valid_sequences = all_valid_sequences(grid, limit: limit)
-      just_letters = extract_letters(all_valid_sequences)
-
-      count_word_occurrences(just_letters, word)
+      find_x_shapes(grid).count
     end
 
-    # Collect sequences from all dimensions - diagonal, horizonta and vertical
-    def self.all_valid_sequences(grid, limit:)
-      find_diagonals(grid, limit: limit) +
-        find_horizontals(grid, limit: limit) +
-        find_verticals(grid, limit: limit)
+    # Define the co-ords of each part of the x
+    def self.coords_of_x(center_row, center_col)
+      top_left = [center_row - 1, center_col - 1]
+      top_right = [center_row - 1, center_col + 1]
+      bottom_left = [center_row + 1, center_col - 1]
+      bottom_right = [center_row + 1, center_col + 1]
+      [top_left, top_right, bottom_left, bottom_right]
     end
 
-    # Finds all valid diagonals (top-left ↘ and top-right ↙)
-    #
-    # In a diagonal, the diff between row and col is always constant. Whether it's 0,
-    # 1 or -1, it just indicates *which diagonal* a set of letters belongs to.
-    # group by returns a construct like this
-    # {
-    # 0 => [['X', 1, 1], ['M', 2, 2], ['A', 3, 3], ['S', 4, 4]], # Main diagonal
-    # -1 => [['B', 1, 2], ['X', 2, 3], ['J', 3, 4]]             # Off-diagonal
-    # }
-    # We then filter out any diagonals that are less than the length of the
-    # word we are looking for, because those are invalid.
-    #
-    # flatten(1) flattens one level e.g [1, [2, [3]]] => [1, 2, [3]]
+    def self.x_shapes_for_letters(grid)
+      # Iterate through all possible center points of the cross shape
+      grid.each_with_object([]) do |(letter, center_row, center_col), matches|
+        # Not an X-MAS if the centre isn't A
+        next unless letter == 'A'
 
-    def self.find_diagonals(grid, limit:)
-      diagonals = [
-        grid.group_by { |(_, row, col)| row - col }.values,
-        grid.group_by { |(_, row, col)| row + col }.values
-      ].flatten(1) # merge the two sets
-      # only select entries that are longer than the length of the word (anything)
-      # shorter wouldn't match the word and is invalid
-      diagonals.select { |diag| diag.size >= limit }
-    end
+        # find the surrounding X for the letter
+        coords_of_x = coords_of_x(center_row, center_col)
 
-    # Finds valid horizontal sequences by grouping by row
-    def self.find_horizontals(grid, limit:)
-      grid.group_by { |(_, row, _)| row }
-          .values
-          .select { |row| row.size >= limit }
-    end
+        # Check if all coordinates of the X exist in the grid (any with 0 or
+        # larger than the grid width/height won't appear in the hash)
+        next unless coords_of_x.all? { |coord| grid_by_coords(grid)[coord] }
 
-    # Finds valid vertical sequences by grouping by column
-    def self.find_verticals(grid, limit:)
-      grid.group_by { |(_, _, col)| col }
-          .values
-          .select { |col| col.size >= limit }
-    end
-
-    # takes an array of letters and finds how many times the word is in it
-    # input = [["X", "M", "X", "M"],["B", "X", "J"]]
-    def self.count_word_occurrences(letter_sets, word)
-      word_length = word.length
-      # count how many times the word appears in a given set
-      letter_sets.sum do |set|
-        # map out segments of the set based on the word length e.g.
-        # [["X", "M"], ["M", "X"], ["X", "M"]] if it was two for ["X", "M", "X", "M"]
-        sets = set.each_cons(word_length)
-        # join the segment ["M", "X"] into "MX" and see if matches the searched for word
-        sets.count { |segment| segment.join == word || segment.join == word.reverse }
+        # add valid match
+        matches << [coords_of_x, letter]
       end
     end
 
-    # Extracts letters from coordinate lists
-    # [[["M", 1, 1], ["S", 2, 2]]] => [["M"], ["S"]]
-    def self.extract_letters(coord_list)
-      coord_list.map { |coord| coord.map(&:first) }
+    # Group cells by row and column so we can look them up easier later e.g
+    # {[1, 1]=>[[".", 1, 1]], [1, 2]=>[["M", 1, 2]] }
+    def self.grid_by_coords(grid)
+      grid.group_by { |(_, row, col)| [row, col] }
     end
 
-    # Converts an input array like ["XZZZ", "ZMZZ"] into coordinates [["X", 1, 1], ["Z", 1, 2]]
-    def self.map_to_coords(input)
-      input.each_with_object([]).with_index(1) do |(row, coords), row_number|
-        row.each_char.with_index { |letter, col| coords << [letter, row_number, col + 1] }
+    def self.find_x_shapes(grid)
+      x_shapes = []
+
+      x_shapes_for_letters(grid).each do |(coords_of_x, letter)|
+        # Pull out the letters from the co-ords
+        letters = extract_letters(letter, grid_by_coords(grid), *coords_of_x)
+        # Check for the "MAS" pattern in diagonals
+        diagonals = make_diagonals(letters)
+        # Skip if the diagonals are not X-MAS
+        next unless matches_word(*diagonals)
+
+        # Store valid results
+        x_shapes << diagonals
       end
+      x_shapes
+    end
+
+    # construct the letters into the top right -> bottom left and top left ->
+    # bottom right diagonal
+    # input = {:top_left=>"M", :center=>"A", :top_right=>"S", :bottom_left=>"M", :bottom_right=>"S"}
+    # output = [["S", "A", "M"], ["M", "A", "S"]]
+    def self.make_diagonals(letters)
+      top_right = [letters[:top_right], letters[:center], letters[:bottom_left]]
+      top_left = [letters[:top_left], letters[:center], letters[:bottom_right]]
+
+      [top_right, top_left]
+    end
+
+    # Extract letters from the co-ordinate sets
+    def self.extract_letters(letter, grid_by_coords, top_left, top_right, bottom_left, bottom_right)
+      {
+        top_left: grid_by_coords[top_left].first[0],
+        center: letter,
+        top_right: grid_by_coords[top_right].first[0],
+        bottom_left: grid_by_coords[bottom_left].first[0],
+        bottom_right: grid_by_coords[bottom_right].first[0]
+      }
+    end
+
+    # takes in letters in this format
+    # {:top_left=>"M", :center=>"A", :top_right=>"S", :bottom_left=>"M", :bottom_right=>"S"}
+    # and checks if the diagonal shape would be an X-MAS
+    def self.matches_word(top_right_diagonal, top_left_diagonal)
+      [%w[M A S], %w[S A M]].include?(top_right_diagonal) &&
+        [%w[M A S], %w[S A M]].include?(top_left_diagonal)
     end
   end
 end
