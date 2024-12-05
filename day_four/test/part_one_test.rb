@@ -56,12 +56,12 @@ class DayFourPartOneTest < Minitest::Test
              %w[M X I D],
              %w[G X K],
              %w[J J]]
-    result = DayFour::PartOne.find_word_count(input, 'XM')
+    result = DayFour::PartOne.count_word_occurrences(input, 'XM')
 
     assert_equal(4, result)
   end
 
-  # # 2547 is correct answer
+  # # 2547 is correct answer on full set
   def test_input_file
     result = DayFour::PartOne.run('day_four/data/test_data.txt', 'XMAS')
 

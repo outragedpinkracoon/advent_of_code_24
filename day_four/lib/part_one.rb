@@ -6,14 +6,22 @@ module DayFour
       input = File.readlines(file_path, chomp: true)
       grid = map_to_coords(input)
       limit = word.length
-      diagonals = find_diagonals(grid, limit: limit)
-      verticals = find_verticals(grid, limit: limit)
-      horizonals = find_horizontals(grid, limit: limit)
-      all_dimensions = diagonals + verticals + horizonals
-      just_letters = just_letters(all_dimensions)
-      find_word_count(just_letters, word)
+
+      all_sequences = all_sequences(grid, limit: limit)
+      just_letters = extract_letters(all_sequences)
+
+      count_word_occurrences(just_letters, word)
     end
 
+    # Collect sequences from all dimensions - diagonal, horizonta and vertical
+    def self.all_sequences(grid, limit:)
+      find_diagonals(grid, limit: limit) +
+        find_horizontals(grid, limit: limit) +
+        find_verticals(grid, limit: limit)
+    end
+
+    # Finds all valid diagonals (top-left ↘ and top-right ↙)
+    #
     # In a diagonal, the diff between row and col is always constant. Whether it's 0,
     # 1 or -1, it just indicates *which diagonal* a set of letters belongs to.
     # group by returns a construct like this
@@ -23,62 +31,50 @@ module DayFour
     # }
     # We then filter out any diagonals that are less than the length of the
     # word we are looking for, because those are invalid.
-    def self.find_diagonals(grid, limit:)
-      top_left_to_bottom_right = grid.group_by { |(_, row, col)| row - col }
-      top_right_to_bottom_left = grid.group_by { |(_, row, col)| row + col }
+    #
+    # flatten(1) flattens one level e.g [1, [2, [3]]] => [1, 2, [3]]
 
-      diagonals = top_left_to_bottom_right.values + top_right_to_bottom_left.values
+    def self.find_diagonals(grid, limit:)
+      diagonals = [
+        grid.group_by { |(_, row, col)| row - col }.values,
+        grid.group_by { |(_, row, col)| row + col }.values
+      ].flatten(1) # merge the two sets
+      # only select entries that are longer than the length of the word (anything)
+      # shorter wouldn't match the word and is invalid
       diagonals.select { |diag| diag.size >= limit }
     end
 
+    # Finds valid horizontal sequences by grouping by row
     def self.find_horizontals(grid, limit:)
-      # Grouping by row to find horizontal sequences
-      rows = grid.group_by { |(_, row, _)| row }
-
-      # Select rows where the number of elements meets or exceeds the limit
-      rows.values.select { |row| row.size >= limit }
+      grid.group_by { |(_, row, _)| row }
+          .values
+          .select { |row| row.size >= limit }
     end
 
+    # Finds valid vertical sequences by grouping by column
     def self.find_verticals(grid, limit:)
-      # Grouping by column to find vertical sequences
-      columns = grid.group_by { |(_, _, col)| col }
-
-      # Select columns where the number of elements meets or exceeds the limit
-      columns.values.select { |column| column.size >= limit }
+      grid.group_by { |(_, _, col)| col }
+          .values
+          .select { |col| col.size >= limit }
     end
 
-    # takes an array of co-ords and finds how many times the word is in it
-    # input = [[["X", 1, 1], ["M", 2, 2], ["A", 3, 3], ["S", 4, 4]]]
-    def self.find_word_count(letter_sets, word)
-      count = 0
-      letter_sets.each do |set|
-        set.each_cons(word.length) do |segment|
-          check = segment.join
-
-          next unless check == word || check == word.reverse
-
-          count += 1
-        end
-      end
-      count
-    end
-
-    # Keep only the first element (letter) from each triplet
-    def self.just_letters(coord_list)
-      coord_list.map do |batch|
-        batch.map { |entry| entry[0] }
+    # takes an array of letters and finds how many times the word is in it
+    def self.count_word_occurrences(letter_sets, word)
+      word_length = word.length
+      letter_sets.sum do |set|
+        set.each_cons(word_length).count { |segment| segment.join == word || segment.join == word.reverse }
       end
     end
 
-    # takes in an array like ["XZZZ", "ZMZZ", "ZZAZ", "ZZZS"] and maps each item
-    # to it's relevant co-ordinate in a matrix e.g. [["X", 1, 1], "Z", 1, 2]
+    # Extracts letters from coordinate lists
+    def self.extract_letters(coord_list)
+      coord_list.map { |batch| batch.map(&:first) }
+    end
+
+    # Converts an input array like ["XZZZ", "ZMZZ"] into coordinates [["X", 1, 1], ["Z", 1, 2]]
     def self.map_to_coords(input)
-      row_number = 1
-      input.each_with_object([]) do |row, obj|
-        row.each_char.with_index do |letter, index|
-          obj << [letter, row_number, index + 1]
-        end
-        row_number += 1
+      input.each_with_object([]).with_index(1) do |(row, coords), row_number|
+        row.each_char.with_index { |letter, col| coords << [letter, row_number, col + 1] }
       end
     end
   end
