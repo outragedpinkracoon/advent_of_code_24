@@ -19,7 +19,7 @@ class DayFourPartOneTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_can_make_groupings
+  def test_can_find_diagonals
     input = [
       ['X', 1, 1], ['B', 1, 2], ['C', 1, 3], ['M', 1, 4],
       ['E', 2, 1], ['M', 2, 2], ['X', 2, 3], ['G', 2, 4],
