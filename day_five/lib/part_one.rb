@@ -8,16 +8,16 @@ module DayFive
 
     def self.parse_sections(file_path)
       file_content = File.read(file_path)
-
-      # Split the content into two parts based on the empty line
       parts = file_content.split("\n\n")
 
-      # Access each part
-      rules = parts[0]
-      updates = parts[1]
+      # rules section, then updates section
+      rules = parse_section(parts[0], '|')
+      updates = parse_section(parts[1], ',')
       [rules, updates]
     end
 
-    def generate_rules(ruleset); end
+    def self.parse_section(section, delimiter)
+      section.split("\n").map { |line| line.split(delimiter).map(&:to_i) }
+    end
   end
 end
