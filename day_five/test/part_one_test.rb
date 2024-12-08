@@ -46,7 +46,7 @@ class DayFivePartOneTest < Minitest::Test
     }
 
     update = [75, 47, 61, 53, 29]
-    result = DayFive::PartOne.update_is_valid?(rules, update)
+    result = DayFive::PartOne.valid_update?(rules, update)
 
     assert(result)
   end
@@ -62,7 +62,7 @@ class DayFivePartOneTest < Minitest::Test
     }
 
     update = [75, 97, 47, 61, 53]
-    result = DayFive::PartOne.update_is_valid?(rules, update)
+    result = DayFive::PartOne.valid_update?(rules, update)
 
     refute(result)
   end
@@ -79,7 +79,7 @@ class DayFivePartOneTest < Minitest::Test
 
     updates = [[75, 47, 61, 53, 29], [75, 97, 47, 61, 53]]
     result = DayFive::PartOne.check_updates(rules, updates)
-    expected = [61]
+    expected = 61
 
     assert_equal(expected, result)
   end

@@ -2,70 +2,64 @@
 
 module DayFive
   module PartOne
-    def self.run(file_path)
-      rules_section, updates = parse_sections(file_path)
-      rules = generate_rules(rules_section)
-      check_updates(rules, updates).sum
-    end
-
-    # Take a list of rules like this [[75, 47], [47, 61], [47, 53],[53, 29], [29, 13]]
-    # and returns them grouped into a hash like this
-    #     {
-    #       75 => [47, 61, 53, 29],
-    #       47 => [61, 53, 29],
-    #     }
-    def self.generate_rules(rules_section)
-      output = Hash.new { |hash, key| hash[key] = [] }
-      rules_section.each_with_object(output) do |rule, obj|
-        obj[rule[0]] << rule[1]
+    class << self
+      # Main entry point to run the program
+      # Reads the file, parses rules and updates, validates updates, and calculates the result
+      def run(file_path)
+        rules_section, updates = parse_sections(file_path)
+        rules = generate_rules(rules_section)
+        check_updates(rules, updates)
+        # Filter valid updates and sum the middle values
       end
-    end
 
-    def self.parse_sections(file_path)
-      file_content = File.read(file_path)
-      parts = file_content.split("\n\n")
-
-      # rules section, then updates section
-      rules = parse_section(parts[0], '|')
-      updates = parse_section(parts[1], ',')
-      [rules, updates]
-    end
-
-    def self.parse_section(section, delimiter)
-      section.split("\n").map { |line| line.split(delimiter).map(&:to_i) }
-    end
-
-    # Takes in an update [75, 47, 61, 53, 29] and checks it against the set of rules
-    # {
-    #   75 => [47, 61, 53, 29],
-    #   47 => [61, 53, 29]
-    # } etc
-    # Returns true if the update is valid against the rules, false if it is not
-    def self.update_is_valid?(rules, update)
-      update.each_with_index do |item, index|
-        next if index.zero? # first value is always before everything
-
-        must_come_after = rules[item]
-        before_me = update[0...index]
-        intersection = must_come_after & before_me
-        return false unless intersection.empty?
+      def check_updates(rules, updates)
+        updates.select { |update| valid_update?(rules, update) }
+               .map { |update| middle(update) }
+               .sum
       end
-      true
-    end
 
-    # check if an update is valid and if it is, return the middle number in the update
-    def self.check_updates(rules, updates)
-      updates.each_with_object([]) do |update, obj|
-        obj << middle(update) if update_is_valid?(rules, update)
+      # Generate rules as a hash from the given list of rule pairs
+      # Example input: [[75, 47], [47, 61]]
+      # Example output: { 75 => [47], 47 => [61] }
+      def generate_rules(rules_section)
+        rules_section.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(key, value), rules|
+          rules[key] << value
+        end
       end
-    end
 
-    # Returning -1 for simplicity
-    def self.middle(array)
-      return -1 if array.length.even?
+      # Parse the rules and updates sections from the file content
+      # Splits the file into two parts: rules section and updates section
+      def parse_sections(file_path)
+        rules_content, updates_content = File.read(file_path).split("\n\n")
+        [parse_section(rules_content, '|'), parse_section(updates_content, ',')]
+      end
 
-      middle_index = array.length / 2
-      array[middle_index]
+      # Parse a single section of the file into an array of arrays
+      # Example input: "75|47\n47|61", delimiter: '|'
+      # Example output: [[75, 47], [47, 61]]
+      def parse_section(content, delimiter)
+        content.lines.map { |line| line.split(delimiter).map(&:to_i) }
+      end
+
+      # Check if an update is valid according to the given rules
+      # An update is valid if no number in the update violates the order rules
+      # Example: [75, 47, 61] is valid if 75 must come before 47 and 61
+      def valid_update?(rules, update)
+        update.each_with_index do |item, index|
+          next if index.zero? # Skip the first item; it has no "before" constraints
+
+          # Find conflicting numbers (must come after the current number but appear earlier in the update)
+          invalid = rules[item] & update[0...index]
+          return false unless invalid.empty?
+        end
+        true
+      end
+
+      # Find the middle element of an array
+      # Returns -1 if the array has an even length
+      def middle(array)
+        array.size.odd? ? array[array.size / 2] : -1
+      end
     end
   end
 end
