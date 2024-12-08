@@ -5,7 +5,7 @@ module DayFive
     def self.run(file_path)
       rules_section, = parse_sections(file_path)
       generate_rules(rules_section)
-      # check_rules(rules, updates)
+      check_updates(rules, updates)
     end
 
     # Take a list of rules like this [[75, 47], [47, 61], [47, 53],[53, 29], [29, 13]]
@@ -53,10 +53,19 @@ module DayFive
       true
     end
 
+    # check if an update is valid and if it is, return the middle number in the update
     def self.check_updates(rules, updates)
-      updates.map do |update|
-        update_is_valid?(rules, update)
+      updates.each_with_object([]) do |update, obj|
+        obj << middle(update) if update_is_valid?(rules, update)
       end
+    end
+
+    # Returning -1 for simplicity
+    def self.middle(array)
+      return -1 if array.length.even?
+
+      middle_index = array.length / 2
+      array[middle_index]
     end
   end
 end
