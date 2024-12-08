@@ -3,15 +3,13 @@
 module DayFive
   module PartOne
     class << self
-      # Main entry point to run the program
-      # Reads the file, parses rules and updates, validates updates, and calculates the result
       def run(file_path)
         rules_section, updates = parse_sections(file_path)
         rules = generate_rules(rules_section)
         check_updates(rules, updates)
-        # Filter valid updates and sum the middle values
       end
 
+      # Filter valid updates and sum the middle values
       def check_updates(rules, updates)
         updates.select { |update| valid_update?(rules, update) }
                .map { |update| middle(update) }
