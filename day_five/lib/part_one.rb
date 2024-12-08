@@ -3,9 +3,9 @@
 module DayFive
   module PartOne
     def self.run(file_path)
-      rules_section, = parse_sections(file_path)
-      generate_rules(rules_section)
-      check_updates(rules, updates)
+      rules_section, updates = parse_sections(file_path)
+      rules = generate_rules(rules_section)
+      check_updates(rules, updates).sum
     end
 
     # Take a list of rules like this [[75, 47], [47, 61], [47, 53],[53, 29], [29, 13]]

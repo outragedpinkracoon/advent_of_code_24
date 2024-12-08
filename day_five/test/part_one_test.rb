@@ -83,4 +83,11 @@ class DayFivePartOneTest < Minitest::Test
 
     assert_equal(expected, result)
   end
+
+  # 5747 is correct answer for full set
+  def test_generates_correct_result
+    result = DayFive::PartOne.run('day_five/data/test_data.txt')
+
+    assert_equal(143, result)
+  end
 end
