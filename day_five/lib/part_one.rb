@@ -52,5 +52,11 @@ module DayFive
       end
       true
     end
+
+    def self.check_updates(rules, updates)
+      updates.map do |update|
+        update_is_valid?(rules, update)
+      end
+    end
   end
 end
