@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative('topological_sorter')
 module DayFive
   module PartTwo
     def self.run(file_path)
@@ -15,38 +16,8 @@ module DayFive
     end
 
     def self.reorder_update(rules, update)
-      # Build a graph for the pages in the current update
-      graph = Hash.new { |hash, key| hash[key] = [] }
-      in_degree = Hash.new(0)
-
-      # Only consider the rules relevant to the current update
-      update_set = update.to_set
-      rules.each do |key, values|
-        next unless update_set.include?(key)
-
-        values.each do |value|
-          next unless update_set.include?(value)
-
-          graph[key] << value
-          in_degree[value] += 1
-        end
-      end
-
-      # Perform topological sort
-      sorted = []
-      queue = update.select { |page| in_degree[page].zero? } # Start with pages having no dependencies
-
-      until queue.empty?
-        current = queue.shift
-        sorted << current
-
-        graph[current].each do |neighbor|
-          in_degree[neighbor] -= 1
-          queue << neighbor if in_degree[neighbor].zero?
-        end
-      end
-
-      sorted
+      sorter = DayFive::PartTwo::TopologicalSorter.new(rules, update)
+      sorter.sorted_pages
     end
   end
 end
